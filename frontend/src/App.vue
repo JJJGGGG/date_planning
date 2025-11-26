@@ -1,11 +1,18 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useAuthStore } from './stores/useAuthStore';
+
+
+const auth = useAuthStore()
+
+async function logout() {
+  await auth.logout()
+}
+</script>
 
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <button @click="logout">Logout</button>
+  {{ auth.user?.email }}
+  <router-view />
 </template>
 
 <style scoped></style>
