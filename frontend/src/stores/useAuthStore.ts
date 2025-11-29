@@ -1,8 +1,9 @@
+import type { User } from '@/models/user';
 import { defineStore } from 'pinia'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    user: null as null | { name: string, email: string },
+    user: null as null | User,
     isAuthenticated: false,
     loading: false,
   }),
@@ -29,20 +30,37 @@ export const useAuthStore = defineStore('auth', {
           return false;
         }
 
-        const user_data = await request.json()
-
         this.loading = false;
-        this.user = {
-          email: user_data.email,
-          name: user_data.name
-        }
-        this.isAuthenticated = true
+
+        await this.get_data()
 
         return true
-      } catch(err: unknown) {
+      } catch {
         this.loading = false
         return false;
       }
+    },
+
+    async get_data() {
+      if(this.isAuthenticated) {
+        return;
+      }
+      const request = await fetch('http://localhost:8000/user/me', {
+        method: "get",
+        credentials: 'include'
+      })
+
+      if(!request.ok) {
+        this.user = null;
+        this.isAuthenticated = false;
+        return;
+      }
+
+      const user: User = await request.json()
+
+      this.user = user;
+      this.isAuthenticated = true;
+
     },
 
     async logout() {

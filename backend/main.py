@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from db.engine import create_db_and_tables
 from routers import health, plans, user
+from utils.settings import settings
 
 
 @asynccontextmanager
@@ -13,8 +14,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 origins = [
-    "http://localhost:5173",   # Vite dev server
-    "http://127.0.0.1:5173",
+    settings.FRONTEND_URL
 ]
 
 app.add_middleware(

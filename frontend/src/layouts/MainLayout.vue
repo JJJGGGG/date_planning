@@ -1,4 +1,3 @@
-
 <template>
     <div>Top</div>
     <router-view />

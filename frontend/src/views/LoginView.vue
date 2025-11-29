@@ -1,35 +1,37 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/useAuthStore';
-import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import ButtonComponent from '@/components/ButtonComponent.vue'
+import * as yup from 'yup';
+import { Form, Field, ErrorMessage } from 'vee-validate';
+
+const schema = yup.object({
+  email: yup.string().required().email(),
+  password: yup.string().required()
+});
 
 const auth = useAuthStore()
 
-const email = ref("")
-const password = ref("")
-
 const router = useRouter()
 
-async function login() {
-    const success = await auth.login(email.value, password.value)
+async function login(values: yup.InferType<typeof schema>) {
+    const success = await auth.login(values.email, values.password)
 
     if(success) {
         router.push("/plans")
     }
 }
+
 </script>
 
 <template>
-    <div>{{ auth.user?.email }}</div>
-    <div>
-        <label>Email</label>
-        <input v-model="email" />
-    </div>
-    <div>
-        <label>Password</label>
-        <input v-model="password" type="password" />
-    </div>
-    <div>
-        <button @click="login">Login</button>
-    </div>
+    <Form @submit="login" :validation-schema="schema">
+        <Field name="email" type="email" />
+        <ErrorMessage name="email" />
+
+        <Field name="password" type="password" />
+        <ErrorMessage name="password" />
+
+        <ButtonComponent title="Login" type="submit"></ButtonComponent>
+    </Form>
 </template>

@@ -28,8 +28,9 @@ const router = createRouter({
   ],
 })
 
-router.beforeEach((to, from) => {
-  const auth = useAuthStore()
+router.beforeEach(async (to) => {
+  const auth = useAuthStore();
+  await auth.get_data();
 
   // If the route requires auth and the user is NOT authenticated
   if (to.meta.requiresAuth && !auth.isAuthenticated) {
