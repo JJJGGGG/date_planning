@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from fastapi import HTTPException, Request
 
 from utils.security import verify_jwt
@@ -16,5 +17,9 @@ def require_jwt(
 
     if payload is None:
         raise HTTPException(status_code=401, detail="Invalid or expired token")
+    
+
+    if payload["exp"] < datetime.now(timezone.utc).timestamp():
+        raise HTTPException(status_code=401, detail="Token expired")
 
     return payload

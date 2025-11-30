@@ -52,7 +52,8 @@ def logout(response: Response):
 def get_my_user(user=Depends(require_jwt)):
     return {
         "name": user["name"],
-        "email": user["email"]
+        "email": user["email"],
+        "expires": user["exp"]
     }
 
 

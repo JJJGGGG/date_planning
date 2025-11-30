@@ -6,6 +6,7 @@ export const useAuthStore = defineStore('auth', {
     user: null as null | User,
     isAuthenticated: false,
     loading: false,
+    expires: 0
   }),
 
   actions: {
@@ -13,7 +14,7 @@ export const useAuthStore = defineStore('auth', {
 
       try {
         this.loading = true
-        const request = await fetch('http://localhost:8000/user/login', {
+        const request = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/login`, {
           method: "post",
           credentials: "include",
           headers: {
@@ -42,10 +43,14 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async get_data() {
+      if(this.expires < Date.now()) {
+        this.user = null;
+        this.isAuthenticated = false;
+      }
       if(this.isAuthenticated) {
         return;
       }
-      const request = await fetch('http://localhost:8000/user/me', {
+      const request = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/me`, {
         method: "get",
         credentials: 'include'
       })
@@ -60,11 +65,12 @@ export const useAuthStore = defineStore('auth', {
 
       this.user = user;
       this.isAuthenticated = true;
+      this.expires = user.expires;
 
     },
 
     async logout() {
-      await fetch('http://localhost:8000/user/logout', {
+      await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/logout`, {
         method: "post",
         credentials: "include"
       })
