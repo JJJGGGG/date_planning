@@ -1,3 +1,4 @@
+from decimal import Decimal
 from typing import TYPE_CHECKING
 from sqlmodel import Field, Relationship, SQLModel
 
@@ -19,4 +20,4 @@ class VibeScore(SQLModel, table=True):
         back_populates="vibe_scores",
     )
 
-    rating: float = Field(ge=0, le=5, decimal_places=1, multiple_of=0.5)
+    rating: Decimal = Field(ge=0, le=5, decimal_places=1, multiple_of=0.5)

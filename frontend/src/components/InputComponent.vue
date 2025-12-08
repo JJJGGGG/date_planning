@@ -4,5 +4,5 @@ const props = defineProps<{name: string, type?: string}>()
 </script>
 
 <template>
-    <input v-model="model" :name="name" :type="type" class="border border-1 border-gray-300 rounded-md px-2" />
+    <input v-model="model" :name="props.name" :type="props.type" class="border border-1 border-gray-300 rounded-md px-2" />
 </template>

@@ -21,5 +21,12 @@ def require_jwt(
 
     if payload["exp"] < datetime.now(timezone.utc).timestamp():
         raise HTTPException(status_code=401, detail="Token expired")
-
+    
     return payload
+
+def require_admin_jwt(request: Request):
+    payload = require_jwt(request)
+
+    if not payload["is_admin"]:
+        raise HTTPException(status_code=403, detail="Admninstrator privilieges required")
+

@@ -1,17 +1,22 @@
 from fastapi import APIRouter, HTTPException, Response, Depends
 
 from schemas.user_schemas import CreateUser, LoginUser
-from services.user_service import create_user, create_user_jwt, get_user
+from services.user_service import create_user, create_user_jwt, find_all_users, get_user
 from utils.security import verify_password
-from dependencies.security import require_jwt
+from dependencies.security import require_admin_jwt, require_jwt
 from utils.values import ACCESS_TOKEN_KEY
 
 
 router = APIRouter()
 
+@router.get("/")
+def get_users(admin=Depends(require_admin_jwt)):
+    users = find_all_users()
+
+    return users
 
 @router.post("/signup")
-def signup(user: CreateUser):
+def signup(user: CreateUser, admin=Depends(require_admin_jwt)):
     created = create_user(user)
 
     return created
@@ -53,6 +58,7 @@ def get_my_user(user=Depends(require_jwt)):
     return {
         "name": user["name"],
         "email": user["email"],
+        "is_admin": user["is_admin"],
         "expires": user["exp"]
     }
 

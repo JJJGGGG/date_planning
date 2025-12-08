@@ -7,6 +7,10 @@ class Settings(BaseSettings):
     FRONTEND_URL: str
     DEBUG: bool = False
 
+    ADMIN_NAME: str
+    ADMIN_EMAIL: str
+    ADMIN_PASSWORD: str
+
     model_config = SettingsConfigDict(env_file=".env")
 
 

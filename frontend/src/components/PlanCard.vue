@@ -1,22 +1,23 @@
 <script setup lang="ts">
-const { place } = defineProps<{
+import GenericCard from './GenericCard.vue';
+import CardAction from './CardAction.vue';
+const { place, address, price, activity, id } = defineProps<{
     place: string,
     activity: string,
     type: string,
     address: string,
-    price: string
+    price: string,
+    id: number
 }>()
 </script>
 
 <template>
-    <div class="rounded border border-1 border-gray-500">
-        <div className="bg-gray-500 text-white font-bold px-4 py-2">
-            {{ activity }}
-        </div>
-        <div className="px-4 py-2">
-            <div>Lugar: {{ place }}</div>
-            <div>Dirección: {{ address }}</div>
-            <div>Precio: {{ price }}</div>
-        </div>
-    </div>
+    <GenericCard :title="activity">
+        <div>Lugar: {{ place }}</div>
+        <div>Dirección: {{ address }}</div>
+        <div>Precio: {{ price }}</div>
+        <template #actions>
+            <CardAction :to="`/plans/${id}`" icon="Ver" />
+        </template>
+    </GenericCard>
 </template>

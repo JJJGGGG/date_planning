@@ -10,7 +10,7 @@ from utils.security import create_jwt, hash_password
 def create_user(user: CreateUser):
     created = User(
         name=user.name,
-        is_admin=False,
+        is_admin=user.is_admin,
         email=user.email,
         hashed_password=hash_password(user.password)
     )
@@ -20,6 +20,12 @@ def create_user(user: CreateUser):
         session.refresh(created)
 
     return created
+
+def find_all_users():
+    with get_session() as session:
+        statement = select(User)
+        users = session.exec(statement).all()
+        return [u.model_dump(exclude={"hashed_password"}) for u in users]
 
 
 def get_user(user_email: str):
@@ -36,7 +42,8 @@ def create_user_jwt(user: User):
     user_dict = {
         "name": user.name,
         "email": user.email,
-        "is_admin": user.is_admin
+        "is_admin": user.is_admin,
+        "id": user.id
     }
 
     return create_jwt(user_dict)

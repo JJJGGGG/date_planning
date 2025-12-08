@@ -7,6 +7,7 @@ class CreateUser(BaseModel):
     password: str = Field(
         min_length=8,
     )
+    is_admin: bool
 
     @field_validator("password")
     def validate_password(cls, v):
@@ -25,3 +26,10 @@ class CreateUser(BaseModel):
 class LoginUser(BaseModel):
     email: EmailStr
     password: str = Field()
+
+class SimpleUser(BaseModel):
+    id: int
+    name: str = Field(min_length=1, max_length=128)
+    email: EmailStr
+    is_admin: bool
+

@@ -37,12 +37,8 @@ export const usePlansStore = defineStore("plans", {
           price
         })
       })
-
-      if(!data.ok) {
-        return false;
-      } else {
-        return true;
-      }
+      
+      return data.ok;
     }
   }
 })

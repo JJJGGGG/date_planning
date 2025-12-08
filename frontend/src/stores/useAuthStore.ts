@@ -1,11 +1,12 @@
-import type { User } from '@/models/user';
+import type { Session } from '@/models/session';
 import { defineStore } from 'pinia'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    user: null as null | User,
+    user: null as null | Session,
     isAuthenticated: false,
     loading: false,
+    isAdmin: false,
     expires: 0
   }),
 
@@ -58,14 +59,16 @@ export const useAuthStore = defineStore('auth', {
       if(!request.ok) {
         this.user = null;
         this.isAuthenticated = false;
+        this.isAdmin = false;
         return;
       }
 
-      const user: User = await request.json()
+      const user: Session = await request.json()
 
       this.user = user;
       this.isAuthenticated = true;
       this.expires = user.expires;
+      this.isAdmin = user.is_admin;
 
     },
 

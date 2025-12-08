@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useAuthStore } from '@/stores/useAuthStore';
 import { useRouter } from 'vue-router';
 import LabelComponent from '@/components/LabelComponent.vue'
 import ButtonComponent from '@/components/ButtonComponent.vue'
