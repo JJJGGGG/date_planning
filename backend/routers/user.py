@@ -56,6 +56,7 @@ def logout(response: Response):
 @router.get("/me")
 def get_my_user(user=Depends(require_jwt)):
     return {
+        "id": user["id"],
         "name": user["name"],
         "email": user["email"],
         "is_admin": user["is_admin"],

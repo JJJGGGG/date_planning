@@ -1,40 +1,44 @@
 <script setup lang="ts">
 import { usePlan } from '@/stores/usePlan';
-import { usePlanRating } from '@/stores/usePlanRating';
 import { usePlanRatings } from '@/stores/usePlanRatings';
-import { computed, ref } from 'vue';
+import { computed, ref, unref } from 'vue';
 import { useRoute } from 'vue-router';
+import ChungungoRating from '@/components/ChungungoRating.vue';
+import { useAuthStore } from '@/stores/useAuthStore';
 
     const route = useRoute()
+    const auth = useAuthStore()
 
     // leer un parámetro
     const id = computed(() =>Number(route.params.id)); 
 
     const {plan} = usePlan(id);
-    const {rating, addRating} = usePlanRating(id)
-    const ratingM = ref(0)
-    const {ratings} = usePlanRatings(id) // ojala unir esto con el de arriba
+    const {ratings, rating, addRating} = usePlanRatings(id) // ojala unir esto con el de arriba
 </script>
 
 
 <template>
     <div class="text-xl">{{ plan?.activity }}</div>
 
-    <div class="grid grid-cols-2">
+    <div class="grid grid-cols-2 mb-4">
         <div>Dirección</div>
         <div>{{ plan?.address }}</div>
         <div>Precio</div>
         <div>{{ plan?.price }}</div>
     </div>
-    <div>Rating</div>
     <div>
-        {{ rating?.rating ?? "no rating" }}
+        Califica este plan:
     </div>
-    <input v-model="ratingM" />
-    <button @click="() => addRating(ratingM)">AAAA</button>
-
+    <div class="px-4 py-4 border-4 border-gray-400 rounded-md bg-gray-200 inline-block">
+        <ChungungoRating :rating="rating?.rating" :changeRating="addRating" />
+    </div>
     <div>
-        <div v-for="other_rating in ratings">{{other_rating.user.email}} {{ other_rating.rating }}</div>
+        <div v-for="other_rating in ratings.filter((r) => r.user_id != auth.user?.id)">
+            <div>
+                {{ other_rating.user.name }}
+            </div>
+            <ChungungoRating :disabled="true" :rating="other_rating.rating"/>
+        </div>
     </div>
     
 </template>
